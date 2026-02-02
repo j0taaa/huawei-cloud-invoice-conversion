@@ -1,0 +1,192 @@
+<!doctype html>
+<head>
+    <title>AWS Invoice Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .mainContainer {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select {
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        select:hover {
+            background-color: #e2e6ea;
+        }
+
+        .submitBtn {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+        }
+
+        .submitBtn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .submitBtn:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+
+        .refreshBtn {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 12px;
+        }
+
+        .refreshBtn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .refreshBtn:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+
+        .instructions p {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Region</h1>
+
+        <form method="POST" action="/select-region">
+            <div class="mainContainer">
+                <p>Choose your region:</p>
+                <select name="region" id="regionSelect">
+                    <option value='LA-Sao Paulo1'>LA-Sao Paulo1</option>
+                    <option value='LA-Santiago'>LA-Santiago</option>
+                    <option value='CN-Hong Kong'>CN-Hong Kong</option>
+                    <option value='AP-Bangkok'>AP-Bangkok</option>
+                    <option value='AP-Singapore'>AP-Singapore</option>
+                    <option value='AP-Jakarta'>AP-Jakarta</option>
+                    <option value='AP-Manila'>AP-Manila</option>
+                    <option value='AF-Johannesburg'>AF-Johannesburg</option>
+                    <option value='AF-Cairo'>AF-Cairo</option>
+                    <option value='TR-Istanbul'>TR-Istanbul</option>
+                    <option value='ME-Riyadh'>ME-Riyadh</option>
+                    <option value='LA-Mexico City1'>LA-Mexico City1</option>
+                    <option value='LA-Mexico City2'>LA-Mexico City2</option>
+                    <option value='EU-Paris'>EU-Paris</option>
+                    <option value='AP-Kuala Lumpur-OP6'>AP-Kuala Lumpur-OP6</option>
+                    <option value='LA-Buenos Aires1'>LA-Buenos Aires1</option>
+                    <option value='UAE-Abu Dhabi'>UAE-Abu Dhabi</option>
+                    <option value='CN North-Beijing4'>CN North-Beijing4</option>
+                    <option value='CN East-Shanghai1'>CN East-Shanghai1</option>
+                    <option value='CN South-Guangzhou'>CN South-Guangzhou</option>
+                    <option value='CN Southwest-Guiyang1'>CN Southwest-Guiyang1</option>
+                    <option value='CN East-Qingdao'>CN East-Qingdao</option>
+                    <option value='CN East2'>CN East2</option>
+                    <option value='EU-Dublin'>EU-Dublin</option>
+                    <option value='TR-Ankara-PUR'>TR-Ankara-PUR</option>
+                </select>
+            </div>
+            <button class="submitBtn" type="submit">Submit</button>
+        </form>
+
+        <button class="refreshBtn" onclick="refreshRegion()">Refresh Region</button>
+
+        <div class="instructions">
+            <p>Select the region in which the Huawei Cloud server will be created. <br>This region data is going to be used to select just the ECS options available in that region.</p>
+        </div>
+    </div>
+
+    <script>
+        async function refreshRegion() {
+            const region = document.getElementById('regionSelect').value;
+            const refreshBtn = document.getElementsByClassName("refreshBtn")[0]
+            refreshBtn.disabled = true
+            refreshBtn.innerText = "Refreshing..."
+            
+
+            const response = await fetch('/refresh-region', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ region }),
+            });
+
+            refreshBtn.disabled = false
+            refreshBtn.innerText = "Refresh Region"
+
+            if (response.ok) {
+                alert("Region refreshed successfully");
+            } else {
+                alert("Failed to refresh region");
+            }
+        }
+    </script>
+</body>
