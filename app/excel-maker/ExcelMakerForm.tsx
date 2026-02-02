@@ -16,6 +16,7 @@ const createEntry = (): UploadEntry => ({
 export default function ExcelMakerForm() {
   const [entries, setEntries] = useState<UploadEntry[]>([createEntry()]);
   const [status, setStatus] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleAdd() {
     setEntries((current) => [...current, createEntry()]);
@@ -31,14 +32,46 @@ export default function ExcelMakerForm() {
     );
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const missing = entries.some((entry) => !entry.name || !entry.file);
     if (missing) {
       setStatus("Add a name and XLSX file for each entry before generating.");
       return;
     }
-    setStatus("Excel bundle queued. Download will start once processing completes.");
+    setIsSubmitting(true);
+    setStatus("Processing Excel bundle...");
+    try {
+      const formData = new FormData();
+      entries.forEach((entry) => {
+        if (entry.file) {
+          formData.append("files", entry.file, entry.file.name);
+          formData.append("labels", entry.name);
+        }
+      });
+      const response = await fetch("/api/excel-maker", {
+        method: "POST",
+        body: formData
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to generate Excel bundle.");
+      }
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = downloadUrl;
+      anchor.download = "excel-bundle.zip";
+      anchor.click();
+      URL.revokeObjectURL(downloadUrl);
+      setStatus("Excel bundle ready! Your download should begin automatically.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong while generating.";
+      setStatus(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -89,7 +122,7 @@ export default function ExcelMakerForm() {
         <button type="button" className="button button--secondary" onClick={handleAdd}>
           + Add file
         </button>
-        <button type="submit" className="button button--primary">
+        <button type="submit" className="button button--primary" disabled={isSubmitting}>
           Generate Excel
         </button>
       </div>
