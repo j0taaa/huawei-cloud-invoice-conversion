@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Invoice Converter</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #f1f3f5;
+        }
+
+        tbody tr:hover {
+            background-color: #e2e6ea;
+        }
+
+        select {
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        select:hover {
+            background-color: #e2e6ea;
+        }
+
+        button {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+
+        .notAvailable {
+            color: red;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        /* Instructions Section */
+        .instructions {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Data Editor</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Kind</th>
+                    <th>Usage</th>
+                    <th>Requests</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                    {% if item['type'] != 'N/A' %}
+                    <tr>
+                        <td>{{ item['type'] }}</td>
+                        <td>{{ item['kind'] }}</td>
+                        <td>{{ item['usage'] }}</td>
+                        <td>{{ item.get('requests', 'N/A') }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% for item in data %}
+            {% if item['type'] == 'N/A' %}
+                <p class="notAvailable">
+                    Items not available on Huawei Cloud:
+                    {% for elt in item['list'] %}
+                        <span>{{ elt }}, </span>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        {% endfor %}
+
+        <select id="regionIn">
+            <option value='LA-Sao Paulo1'>LA-Sao Paulo1</option>
+            <option value='LA-Santiago'>LA-Santiago</option>
+            <option value='CN-Hong Kong'>CN-Hong Kong</option>
+            <option value='AP-Bangkok'>AP-Bangkok</option>
+            <option value='AP-Singapore'>AP-Singapore</option>
+            <option value='AP-Jakarta'>AP-Jakarta</option>
+            <option value='AP-Manila'>AP-Manila</option>
+            <option value='AF-Johannesburg'>AF-Johannesburg</option>
+            <option value='AF-Cairo'>AF-Cairo</option>
+            <option value='TR-Istanbul'>TR-Istanbul</option>
+            <option value='ME-Riyadh'>ME-Riyadh</option>
+            <option value='LA-Mexico City1'>LA-Mexico City1</option>
+            <option value='LA-Mexico City2'>LA-Mexico City2</option>
+            <option value='EU-Paris'>EU-Paris</option>
+            <option value='AP-Kuala Lumpur-OP6'>AP-Kuala Lumpur-OP6</option>
+            <option value='LA-Buenos Aires1'>LA-Buenos Aires1</option>
+            <option value='UAE-Abu Dhabi'>UAE-Abu Dhabi</option>
+            <option value='CN North-Beijing4'>CN North-Beijing4</option>
+            <option value='CN East-Shanghai1'>CN East-Shanghai1</option>
+            <option value='CN South-Guangzhou'>CN South-Guangzhou</option>
+            <option value='CN Southwest-Guiyang1'>CN Southwest-Guiyang1</option>
+            <option value='CN East-Qingdao'>CN East-Qingdao</option>
+            <option value='CN East2'>CN East2</option>
+            <option value='EU-Dublin'>EU-Dublin</option>
+            <option value='TR-Ankara-PUR'>TR-Ankara-PUR</option>
+        </select>
+        <button id="copyButton">Copy code to clipboard</button>
+
+        <!-- Instructions Section -->
+        <div class="instructions">
+            <p>The table shows all converted items from AWS to Huawei Cloud, with columns for the type of instance, its kind of service, usage (measured differently depending on the service), and requests (when necessary for the service). Below the table, it is shown a list of services that are just available on AWS and there isn't an equivalent in Huawei Cloud. The copy to clipboard button, when clicked, copies a JS to the clipboard that, when pasted with the Huawei Cloud price calculator page open, automatically clicks and adds every needed item to the cart.</p>
+        </div>
+    </div>
+
+    <script>
+        let cpBtn = document.getElementById("copyButton");
+        let regionInput = document.getElementById("regionIn");
+
+        function fallbackCopyText(text) {
+		let textarea = document.createElement("textarea");
+		textarea.value = text;
+		document.body.appendChild(textarea);
+		textarea.select();
+		document.execCommand("copy");
+		document.body.removeChild(textarea);
+		alert("Code copied using fallback method");
+	}
+
+	cpBtn.addEventListener("click", async () => {
+		let region = regionInput.value;
+		let resp = await fetch("/getJS?region=" + region);
+		if (!resp.ok) {
+			throw new Error(`Response status: ${resp.status}`);
+		}
+		const json = await resp.json();
+		let code = json.code;
+
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			await navigator.clipboard.writeText(code);
+			alert("Code copied successfully");
+		} else {
+			fallbackCopyText(code);
+		}	
+	});
+
+    </script>
+</body>
+</html>
