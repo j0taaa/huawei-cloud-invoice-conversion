@@ -43,42 +43,57 @@ export default function ExcelMakerForm() {
 
   return (
     <form className="form-stack" onSubmit={handleSubmit}>
-      {entries.map((entry) => (
-        <div key={entry.id} className="flex-row">
-          <input
-            className="input"
-            type="text"
-            placeholder="Enter file name..."
-            value={entry.name}
-            onChange={(event) => handleChange(entry.id, { name: event.target.value })}
-            required
-          />
-          <input
-            className="input input--file"
-            type="file"
-            accept=".xlsx"
-            onChange={(event) => handleChange(entry.id, { file: event.target.files?.[0] })}
-            required
-          />
-          <button
-            type="button"
-            className="button button--secondary"
-            onClick={() => handleRemove(entry.id)}
-            disabled={entries.length === 1}
-          >
-            Remove
-          </button>
-        </div>
-      ))}
-      <div className="flex-row">
-        <button type="button" className="button button--success" onClick={handleAdd}>
-          + Add File
+      <div className="upload-list">
+        {entries.map((entry, index) => (
+          <div key={entry.id} className="upload-row">
+            <div className="upload-field">
+              <label className="field-label" htmlFor={`entry-name-${entry.id}`}>
+                File label
+              </label>
+              <input
+                id={`entry-name-${entry.id}`}
+                className="input"
+                type="text"
+                placeholder="e.g. November invoice"
+                value={entry.name}
+                onChange={(event) => handleChange(entry.id, { name: event.target.value })}
+                required
+              />
+            </div>
+            <div className="upload-field">
+              <label className="field-label" htmlFor={`entry-file-${entry.id}`}>
+                XLSX file
+              </label>
+              <input
+                id={`entry-file-${entry.id}`}
+                className="input input--file"
+                type="file"
+                accept=".xlsx"
+                onChange={(event) => handleChange(entry.id, { file: event.target.files?.[0] })}
+                required
+              />
+            </div>
+            <button
+              type="button"
+              className="button button--secondary"
+              onClick={() => handleRemove(entry.id)}
+              disabled={entries.length === 1}
+              aria-label={`Remove file ${index + 1}`}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="upload-actions">
+        <button type="button" className="button button--secondary" onClick={handleAdd}>
+          + Add file
         </button>
-        <button type="submit" className="button button--success">
+        <button type="submit" className="button button--primary">
           Generate Excel
         </button>
       </div>
-      {status ? <p className="instructions">{status}</p> : null}
+      {status ? <p className="status-banner">{status}</p> : null}
     </form>
   );
 }
