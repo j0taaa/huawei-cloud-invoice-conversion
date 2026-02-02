@@ -1,0 +1,150 @@
+<!doctype html>
+<head>
+    <title>AWS Invoice Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+        h1 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        a {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 1.1rem;
+            margin: 12px 0;
+            padding: 14px 24px;
+            color: #ffffff;
+            background-color: #dc3545;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        a:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        a:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+        #getDataBtn {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+        #getDataBtn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        #getDataBtn:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+        #getDataState {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #888;
+            margin-top: 15px;
+        }
+        .inner-container {
+            background-color: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .instructions {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .corner-ball {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #dc3545;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+        .corner-ball:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        .corner-ball:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AWS Invoice Converter</h1>
+        <div class="inner-container">
+            <p><a href="/file-recieve">Send PDF File</a></p>
+            <p><a href="/select-positions">Select Positions</a></p>
+            <button id="getDataBtn">Process data</button>
+            <span id="getDataState"></span>
+        </div>
+        <span>or</span>
+        <div class="inner-container">
+            <p><a href="/manual-specs">Add ECS Specs manually</a></p>
+        </div>
+        <div class="inner-container">
+            <p><a href="/select-region">Select Region</a></p>
+            <p><a href="/select-ecs">Select ECS Equivalent</a></p>
+            <p><a href="/table">See Table</a></p>
+        </div>
+        <div class="instructions">
+            <p>This website can be used to get a Huawei Cloud setup based on a AWS Invoice PDF. To use this website, click the buttons from top to bottom.</p>
+        </div>
+    </div>
+    <a href="/excel-maker" class="corner-ball" title="Excel Maker">📊</a>
+    <script>
+        document.getElementById("getDataBtn").addEventListener("click", () => {
+            let spa = document.getElementById("getDataState")
+            spa.innerText = "Loading..."
+            fetch("/get-data").then(() => { spa.innerText = "Done" })
+        })
+    </script>
+</body>
