@@ -18,9 +18,6 @@ export default function HomePage() {
         >
           <div className="link-stack">
             <LinkButton href="/file-receive">Send PDF File</LinkButton>
-            <LinkButton href="/select-positions" variant="secondary">
-              Select Positions
-            </LinkButton>
             <GetDataButton />
           </div>
         </SectionCard>
@@ -40,9 +37,6 @@ export default function HomePage() {
           subtitle="Finalize region and ECS equivalents before generating the table output."
         >
           <div className="link-stack">
-            <LinkButton href="/select-region" variant="secondary">
-              Select Region
-            </LinkButton>
             <LinkButton href="/select-ecs" variant="secondary">
               Select ECS Equivalent
             </LinkButton>
@@ -68,9 +62,8 @@ export default function HomePage() {
 
       <SectionCard title="How it works" muted>
         <p className="instructions">
-          This workspace helps map AWS invoice line items to Huawei Cloud services. Follow the
-          buttons from top to bottom, review the suggested ECS equivalents, and copy automation
-          code for the Huawei price calculator.
+          Use the steps above to map AWS invoice lines to Huawei Cloud services and export your
+          final table.
         </p>
       </SectionCard>
 

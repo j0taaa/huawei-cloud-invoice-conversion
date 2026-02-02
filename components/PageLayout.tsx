@@ -19,7 +19,7 @@ export default function PageLayout({
 }) {
   return (
     <div className="page" style={{ maxWidth: maxWidthMap[maxWidth] }}>
-      <div>
+      <div className="page-header">
         <h1 className="section-title">{title}</h1>
         {subtitle ? <p className="section-subtitle">{subtitle}</p> : null}
       </div>

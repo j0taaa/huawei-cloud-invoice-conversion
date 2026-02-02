@@ -8,13 +8,14 @@ export default function ExcelMakerPage() {
       title="Upload Invoices"
       subtitle="Combine multiple XLSX invoices into a single export."
     >
-      <SectionCard title="Excel maker" muted>
-        <ExcelMakerForm />
-        <p className="instructions">
-          Click “Add File” to include as many XLSX files as you need. Assign a friendly name
-          to each file before generating the combined report.
-        </p>
-      </SectionCard>
+      <div className="excel-maker">
+        <SectionCard title="Excel maker">
+          <ExcelMakerForm />
+          <p className="instructions">
+            Add each XLSX file with a short label so you can recognize it in the final export.
+          </p>
+        </SectionCard>
+      </div>
     </PageLayout>
   );
 }
