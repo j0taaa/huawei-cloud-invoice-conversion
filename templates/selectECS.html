@@ -1,0 +1,126 @@
+<!doctype html>
+<head>
+    <title>AWS Invoice Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .innerDiv {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select {
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        select:hover {
+            background-color: #e2e6ea;
+        }
+
+        button {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            background-color: #bd2130;
+            transform: translateY(0);
+        }
+
+        /* Instructions Section */
+        .instructions > p{
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select ECS Flavor</h1>
+        <form method="POST" action="/select-ecs">
+            {% for flavor in flavors %}
+                <div class="innerDiv">
+                    <p>{{ flavor["name"] }} - {{ flavor["vCPUs"] }} - {{ flavor["Memory"] }}</p>
+                    <select name="flavor_{{ flavor['name'] }}">
+                        {% for option in data[flavor["name"]] %}
+                            <option value="{{ option['flavor'] }}">
+                                {{ option['flavor'] }} - {{ option['vCPUs'] }} vCPUs - {{ option['memory'] }} GiB
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Instructions Section -->
+        <div class="instructions">
+            <p>In this page, it is shown the option to select an ECS(or Flexus) equivalent for each EC2 instance that was in the invoice. There are 6 options for each EC2 instance, 5 are ECS and one is a Flexus. All options shown have a similar configuration to the AWS equivalent. The amount of vCPUs and memory in the ECS options is always equal or greater to the one of the EC2s</p>
+        </div>
+    </div>
+</body>
+</html>
