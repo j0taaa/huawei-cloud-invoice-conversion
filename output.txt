@@ -1,0 +1,33 @@
+t2.nano - 743.023 - hrs
+t2.medium - 744.0 - hrs
+snapshot data stored - 609.765 - GB-Mo
+General Purpose Storage - 99.866 - GB-Mo
+General Purpose SSD - 512.31 - GB-Mo
+r5a.2xlarge - 744.0 - hrs
+t2.micro - 744.0 - hrs
+t2.small - 744.0 - hrs
+t2.medium - 744.0 - hrs
+t3a.xlarge - 742.806 - hrs
+t3.xlarge - 744.0 - hrs
+r4.2xlarge - 355.237 - hrs
+r5a.2xlarge - 1471.768 - hrs
+r4.2xlarge - 744.0 - hrs
+t3.xlarge - 1472.468 - hrs
+t3a.xlarge - 355.237 - hrs
+magnetic provisioned storage - 744.0 - hrs
+snapshot data stored - 29.0 - GB-Mo
+General Purpose Storage - 4419.979 - GB-Mo
+General Purpose SSD - 545.0 - GB-Mo
+$0.00 per bucket / month for the first 2000 general purpose buckets in your account - 4430.0 - GB-Mo
+requests - 22186.0 - requests
+$0.023 per GB - first 50 TB / month of storage used - 35.0 - requests
+data transfer to - 14224.438 - GB-Mo
+data transfer out - 10.096 - GB
+$0.000 per GB - regional data transfer under the monthly global free tier - 11.468 - GB
+data transfer out - 281.72 - GB
+$0.000 per GB - regional data transfer under the monthly global free tier - 88.532 - GB
+$0.006 per used Network load balancer capacity unit-hour (or partial hour) - 741.0 - hrs
+$0.006 per used Network load balancer capacity unit-hour (or partial hour) - 3.0 - hrs
+$0.0225 per Network LoadBalancer-hour (or partial hour) - 93.069 - hrs
+$0.01 per build minute (4 vCPU, 7 GB Memory) - 20461.922 - usagerecords
+data transfer out - 10.35 - min
