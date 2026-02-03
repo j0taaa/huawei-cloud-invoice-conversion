@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:3000`.
+Visit `http://localhost:5000`.
 
 ## Scripts
 
@@ -22,5 +22,5 @@ Visit `http://localhost:3000`.
 
 ```bash
 docker build -t huawei-cloud-invoice-conversion .
-docker run -p 3000:3000 huawei-cloud-invoice-conversion
+docker run -p 5000:5000 huawei-cloud-invoice-conversion
 ```
