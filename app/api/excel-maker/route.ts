@@ -11,7 +11,7 @@ function sanitizeFileName(value: string, fallback: string) {
 }
 
 async function runPython(payloadPath: string) {
-  const candidates = ["python3", "python"];
+  const candidates = ["/usr/bin/python3", "python3", "python"];
   let lastError: Error | undefined;
 
   for (const candidate of candidates) {

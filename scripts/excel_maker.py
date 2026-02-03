@@ -140,14 +140,22 @@ def write_sheet(writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str, title
 
 def create_workbook(file_streams, titles, output_path: Path):
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    pages = []
+    
+    for stream, title in zip(file_streams, titles):
+        df_raw = pd.read_excel(stream, sheet_name=1, skiprows=1, skipfooter=3, engine="openpyxl")
+        df_proc = process_dataframe(df_raw)
+        safe = title[:31]
+        pages.append((safe, df_proc, title))
+    
+    if not pages:
+        raise ValueError("No valid data sheets to write")
+    
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
-        pages = []
-        for stream, title in zip(file_streams, titles):
-            df_raw = pd.read_excel(stream, sheet_name=1, skiprows=1, skipfooter=3)
-            df_proc = process_dataframe(df_raw)
-            safe = title[:31]
+        written_pages = []
+        for safe, df_proc, title in pages:
             count = write_sheet(writer, df_proc, sheet_name=safe, title=title)
-            pages.append((safe, count))
+            written_pages.append((safe, count))
 
         wb = writer.book
         thin = Border(
@@ -181,7 +189,7 @@ def create_workbook(file_streams, titles, output_path: Path):
             cell.alignment = align
             cell.border = thin
 
-        for i, (sheet, count) in enumerate(pages, start=1):
+        for i, (sheet, count) in enumerate(written_pages, start=1):
             row = i + 2
             summary.row_dimensions[row].height = 35
 
