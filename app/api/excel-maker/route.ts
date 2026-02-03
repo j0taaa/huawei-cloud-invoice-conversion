@@ -11,23 +11,37 @@ function sanitizeFileName(value: string, fallback: string) {
 }
 
 async function runPython(payloadPath: string) {
-  return new Promise<void>((resolve, reject) => {
-    const process = spawn("python", [PYTHON_SCRIPT, payloadPath], { stdio: ["ignore", "pipe", "pipe"] });
-    let errorOutput = "";
-    process.stderr.on("data", (chunk) => {
-      errorOutput += chunk.toString();
-    });
-    process.on("error", (error) => {
-      reject(error);
-    });
-    process.on("close", (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(errorOutput || `Python exited with code ${code}`));
-      }
-    });
-  });
+  const candidates = ["python3", "python"];
+  let lastError: Error | undefined;
+
+  for (const candidate of candidates) {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const process = spawn(candidate, [PYTHON_SCRIPT, payloadPath], {
+          stdio: ["ignore", "pipe", "pipe"]
+        });
+        let errorOutput = "";
+        process.stderr.on("data", (chunk) => {
+          errorOutput += chunk.toString();
+        });
+        process.on("error", (error) => {
+          reject(error);
+        });
+        process.on("close", (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(errorOutput || `Python exited with code ${code}`));
+          }
+        });
+      });
+      return;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error("Unknown python error.");
+    }
+  }
+
+  throw lastError ?? new Error("Unable to locate a Python interpreter.");
 }
 
 export async function POST(request: Request) {
