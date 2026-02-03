@@ -40,7 +40,7 @@ export default function ExcelMakerForm() {
       return;
     }
     setIsSubmitting(true);
-    setStatus("Processing Excel bundle...");
+    setStatus("Processing combined Excel workbook...");
     try {
       const formData = new FormData();
       entries.forEach((entry) => {
@@ -55,16 +55,16 @@ export default function ExcelMakerForm() {
       });
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Failed to generate Excel bundle.");
+        throw new Error(errorText || "Failed to generate combined Excel workbook.");
       }
       const blob = await response.blob();
       const downloadUrl = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
-      anchor.download = "excel-bundle.zip";
+      anchor.download = "combined-excel.xlsx";
       anchor.click();
       URL.revokeObjectURL(downloadUrl);
-      setStatus("Excel bundle ready! Your download should begin automatically.");
+      setStatus("Combined Excel workbook ready! Your download should begin automatically.");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Something went wrong while generating.";
