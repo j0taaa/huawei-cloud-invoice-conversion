@@ -18,6 +18,9 @@ export default function HomePage() {
         >
           <div className="link-stack">
             <LinkButton href="/file-receive">Send PDF File</LinkButton>
+            <LinkButton href="/select-positions" variant="secondary">
+              Select Positions
+            </LinkButton>
             <GetDataButton />
           </div>
         </SectionCard>
@@ -37,6 +40,9 @@ export default function HomePage() {
           subtitle="Finalize region and ECS equivalents before generating the table output."
         >
           <div className="link-stack">
+            <LinkButton href="/select-region" variant="secondary">
+              Select Region
+            </LinkButton>
             <LinkButton href="/select-ecs" variant="secondary">
               Select ECS Equivalent
             </LinkButton>
