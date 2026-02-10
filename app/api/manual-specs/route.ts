@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
-import { createInstance } from "@/lib/instances";
+import { createInstance, InstanceData } from "@/lib/instances";
 
 function buildSpecs(message: string) {
   const numbers = message.match(/\d+(?:\.\d+)?/g) ?? [];
-  const specs = [] as Array<Record<string, string | number>>;
+  const specs: InstanceData[] = [];
   for (let i = 0; i < numbers.length - 2; i += 3) {
     const vcpus = Number(numbers[i]);
     const memory = Number(numbers[i + 1]);

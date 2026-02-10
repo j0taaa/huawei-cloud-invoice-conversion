@@ -10,6 +10,7 @@ export type InstanceData = {
   vcpus?: number;
   memory?: number;
   flavor?: string;
+  family?: string;
 };
 
 export type InstanceRecord = {
