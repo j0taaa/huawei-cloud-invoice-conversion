@@ -1,8 +1,15 @@
 import { spawn } from "child_process";
 
 export async function runPython(scriptPath: string, args: string[]) {
-  const candidates = ["/usr/bin/python3", "python3", "python"];
-  let lastError: Error | undefined;
+  const candidates = [
+    process.env.PYTHON_BIN,
+    "/usr/local/bin/python3",
+    "/usr/bin/python3",
+    "python3",
+    "python",
+    "py"
+  ].filter((value): value is string => Boolean(value));
+  let missingBinaryError: Error | undefined;
 
   for (const candidate of candidates) {
     try {
@@ -31,9 +38,20 @@ export async function runPython(scriptPath: string, args: string[]) {
       });
       return output;
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error("Unknown python error.");
+      const knownError = error instanceof Error ? error : new Error("Unknown python error.");
+      const errorCode = (knownError as NodeJS.ErrnoException).code;
+      if (errorCode === "ENOENT") {
+        missingBinaryError = knownError;
+        continue;
+      }
+      throw knownError;
     }
   }
 
-  throw lastError ?? new Error("Unable to locate a Python interpreter.");
+  throw (
+    missingBinaryError ??
+    new Error(
+      "Unable to locate a Python interpreter. Set PYTHON_BIN or install python3."
+    )
+  );
 }

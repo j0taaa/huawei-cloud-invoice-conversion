@@ -6,6 +6,7 @@ This repository is now a Next.js + React + TypeScript application for guiding AW
 
 ```bash
 npm install
+python3 -m pip install pandas openpyxl
 npm run dev
 ```
 
@@ -24,3 +25,5 @@ Visit `http://localhost:5000`.
 docker build -t huawei-cloud-invoice-conversion .
 docker run -p 5000:5000 huawei-cloud-invoice-conversion
 ```
+
+The Docker image installs Python and required Excel dependencies (`pandas`, `openpyxl`) for the `/excel-maker` API route.
